@@ -191,3 +191,45 @@ func (c *Client) GetPASFKeywords(keyword, country, currency, source string) ([]b
 
 	return c.post("/get_pasf_keywords", data)
 }
+
+// GetDomainKeywords retrieves keywords that a domain ranks for
+func (c *Client) GetDomainKeywords(domain, country, currency string, limit int) ([]byte, error) {
+	data := url.Values{}
+	data.Set("domain", domain)
+	data.Set("country", country)
+	data.Set("currency", currency)
+	if limit > 0 {
+		data.Set("limit", fmt.Sprintf("%d", limit))
+	}
+
+	return c.post("/get_domain_keywords", data)
+}
+
+// GetURLKeywords retrieves keywords that a URL ranks for
+func (c *Client) GetURLKeywords(targetURL, country, currency string, limit int) ([]byte, error) {
+	data := url.Values{}
+	data.Set("url", targetURL)
+	data.Set("country", country)
+	data.Set("currency", currency)
+	if limit > 0 {
+		data.Set("limit", fmt.Sprintf("%d", limit))
+	}
+
+	return c.post("/get_url_keywords", data)
+}
+
+// GetDomainTraffic retrieves traffic metrics for a domain
+func (c *Client) GetDomainTraffic(domain string) ([]byte, error) {
+	data := url.Values{}
+	data.Set("domain", domain)
+
+	return c.post("/get_domain_traffic", data)
+}
+
+// GetURLTraffic retrieves traffic metrics for a URL
+func (c *Client) GetURLTraffic(targetURL string) ([]byte, error) {
+	data := url.Values{}
+	data.Set("url", targetURL)
+
+	return c.post("/get_url_traffic", data)
+}
