@@ -169,3 +169,25 @@ func (c *Client) GetKeywordData(keywords []string, country, currency, source str
 		Data:    allData,
 	}, nil
 }
+
+// GetRelatedKeywords retrieves related keywords for a given keyword
+func (c *Client) GetRelatedKeywords(keyword, country, currency, source string) ([]byte, error) {
+	data := url.Values{}
+	data.Set("country", country)
+	data.Set("currency", currency)
+	data.Set("dataSource", source)
+	data.Set("kw", keyword)
+
+	return c.post("/get_related_keywords", data)
+}
+
+// GetPASFKeywords retrieves "People Also Search For" keywords for a given keyword
+func (c *Client) GetPASFKeywords(keyword, country, currency, source string) ([]byte, error) {
+	data := url.Values{}
+	data.Set("country", country)
+	data.Set("currency", currency)
+	data.Set("dataSource", source)
+	data.Set("kw", keyword)
+
+	return c.post("/get_pasf_keywords", data)
+}
