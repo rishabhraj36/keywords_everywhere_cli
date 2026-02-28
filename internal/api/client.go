@@ -108,3 +108,13 @@ func (c *Client) GetCredits() (*CreditsResponse, error) {
 
 	return &resp, nil
 }
+
+// GetCountries retrieves the list of supported countries
+func (c *Client) GetCountries() ([]byte, error) {
+	return c.get("/countries")
+}
+
+// GetCurrencies retrieves the list of supported currencies
+func (c *Client) GetCurrencies() ([]byte, error) {
+	return c.get("/currencies")
+}
