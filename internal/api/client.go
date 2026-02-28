@@ -233,3 +233,25 @@ func (c *Client) GetURLTraffic(targetURL string) ([]byte, error) {
 
 	return c.post("/get_url_traffic", data)
 }
+
+// GetDomainBacklinks retrieves backlinks for a domain
+func (c *Client) GetDomainBacklinks(domain string, limit int) ([]byte, error) {
+	data := url.Values{}
+	data.Set("domain", domain)
+	if limit > 0 {
+		data.Set("limit", fmt.Sprintf("%d", limit))
+	}
+
+	return c.post("/get_domain_backlinks", data)
+}
+
+// GetPageBacklinks retrieves backlinks for a specific page URL
+func (c *Client) GetPageBacklinks(targetURL string, limit int) ([]byte, error) {
+	data := url.Values{}
+	data.Set("url", targetURL)
+	if limit > 0 {
+		data.Set("limit", fmt.Sprintf("%d", limit))
+	}
+
+	return c.post("/get_page_backlinks", data)
+}
