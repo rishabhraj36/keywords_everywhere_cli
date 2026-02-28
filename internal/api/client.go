@@ -118,3 +118,54 @@ func (c *Client) GetCountries() ([]byte, error) {
 func (c *Client) GetCurrencies() ([]byte, error) {
 	return c.get("/currencies")
 }
+
+// KeywordDataResponse represents the response from keyword data API
+type KeywordDataResponse struct {
+	Credits int               `json:"credits"`
+	Data    []json.RawMessage `json:"data"`
+}
+
+// GetKeywordData retrieves volume, CPC, and competition data for keywords
+// Keywords are batched in groups of 100 to respect API limits
+func (c *Client) GetKeywordData(keywords []string, country, currency, source string) (*KeywordDataResponse, error) {
+	const batchSize = 100
+	var allData []json.RawMessage
+	totalCredits := 0
+
+	for i := 0; i < len(keywords); i += batchSize {
+		end := i + batchSize
+		if end > len(keywords) {
+			end = len(keywords)
+		}
+		batch := keywords[i:end]
+
+		data := url.Values{}
+		data.Set("country", country)
+		data.Set("currency", currency)
+		data.Set("dataSource", source)
+		for _, kw := range batch {
+			data.Add("kw[]", kw)
+		}
+
+		body, err := c.post("/get_keyword_data", data)
+		if err != nil {
+			return nil, err
+		}
+
+		var resp struct {
+			Credits int               `json:"credits"`
+			Data    []json.RawMessage `json:"data"`
+		}
+		if err := json.Unmarshal(body, &resp); err != nil {
+			return nil, err
+		}
+
+		totalCredits += resp.Credits
+		allData = append(allData, resp.Data...)
+	}
+
+	return &KeywordDataResponse{
+		Credits: totalCredits,
+		Data:    allData,
+	}, nil
+}
