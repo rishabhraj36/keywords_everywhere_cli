@@ -12,10 +12,11 @@ import (
 	"time"
 )
 
-const baseURL = "https://api.keywordseverywhere.com/v1"
+const defaultBaseURL = "https://api.keywordseverywhere.com/v1"
 
 type Client struct {
 	apiKey     string
+	baseURL    string
 	httpClient *http.Client
 }
 
@@ -26,12 +27,28 @@ func NewClient() (*Client, error) {
 	}
 	return &Client{
 		apiKey:     apiKey,
+		baseURL:    defaultBaseURL,
 		httpClient: &http.Client{Timeout: 30 * time.Second},
 	}, nil
 }
 
+// NewClientWithOptions creates a client with custom options (for testing)
+func NewClientWithOptions(apiKey, baseURL string, httpClient *http.Client) *Client {
+	if baseURL == "" {
+		baseURL = defaultBaseURL
+	}
+	if httpClient == nil {
+		httpClient = &http.Client{Timeout: 30 * time.Second}
+	}
+	return &Client{
+		apiKey:     apiKey,
+		baseURL:    baseURL,
+		httpClient: httpClient,
+	}
+}
+
 func (c *Client) get(endpoint string) ([]byte, error) {
-	req, err := http.NewRequest("GET", baseURL+endpoint, nil)
+	req, err := http.NewRequest("GET", c.baseURL+endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +74,7 @@ func (c *Client) get(endpoint string) ([]byte, error) {
 }
 
 func (c *Client) post(endpoint string, data url.Values) ([]byte, error) {
-	req, err := http.NewRequest("POST", baseURL+endpoint, strings.NewReader(data.Encode()))
+	req, err := http.NewRequest("POST", c.baseURL+endpoint, strings.NewReader(data.Encode()))
 	if err != nil {
 		return nil, err
 	}
