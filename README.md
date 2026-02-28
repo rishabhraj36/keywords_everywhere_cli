@@ -1,5 +1,7 @@
 # Keywords Everywhere CLI
 
+[![CI](https://github.com/mrm/keywords-everywhere-cli/actions/workflows/ci.yml/badge.svg)](https://github.com/mrm/keywords-everywhere-cli/actions/workflows/ci.yml)
+
 A Go CLI wrapper for the [Keywords Everywhere API](https://api.keywordseverywhere.com/docs/). Outputs JSON for easy parsing in scripts and automation.
 
 ## Installation
@@ -117,6 +119,23 @@ API calls consume credits from your Keywords Everywhere account:
 - Other endpoints: varies (check API docs)
 
 The `keywords` command automatically batches requests (100 keywords per API call).
+
+## Development
+
+```bash
+# Run tests
+go test -v ./...
+
+# Run tests with coverage
+go test -coverprofile=coverage.out ./...
+go tool cover -html=coverage.out
+
+# Build
+go build -o ke .
+
+# Install locally
+go install .
+```
 
 ## License
 
