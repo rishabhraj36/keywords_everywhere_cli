@@ -88,3 +88,23 @@ type Response struct {
 	Credits int             `json:"credits"`
 	Data    json.RawMessage `json:"data"`
 }
+
+// CreditsResponse represents the account credits response
+type CreditsResponse struct {
+	Credits int `json:"credits"`
+}
+
+// GetCredits retrieves the current account credit balance
+func (c *Client) GetCredits() (*CreditsResponse, error) {
+	body, err := c.get("/account/credits")
+	if err != nil {
+		return nil, err
+	}
+
+	var resp CreditsResponse
+	if err := json.Unmarshal(body, &resp); err != nil {
+		return nil, err
+	}
+
+	return &resp, nil
+}
