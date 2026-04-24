@@ -26,6 +26,8 @@ Set your API key as an environment variable:
 export KEYWORDS_EVERYWHERE_API_KEY="your-api-key"
 ```
 
+Or use [`authsome`](https://github.com/manojbajaj95/authsome) with the authsome skill, which handles runtime credential injection for agent workflows.
+
 Get your API key at [keywordseverywhere.com](https://keywordseverywhere.com).
 
 ## Commands
